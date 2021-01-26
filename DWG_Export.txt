@@ -1,0 +1,8 @@
+﻿Dim SubFolder as String = "DWG"
+
+If Not System.IO.Directory.Exists(ThisDoc.Path & "\" & SubFolder) Then
+     System.IO.Directory.CreateDirectory(ThisDoc.Path & "\" & SubFolder)
+End If
+
+FullName=ThisDoc.Path & "\" & SubFolder & "\" & "acad_" & ThisDoc.FileName(False)& (".dwg")
+ThisDoc.Document.SaveAs(FullName, True)

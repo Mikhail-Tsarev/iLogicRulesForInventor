@@ -1,0 +1,76 @@
+﻿
+
+Sub Main()
+	Dim oDoc As Inventor.Document = ThisApplication.ActiveDocument
+
+	If oDoc.DocumentType <> kAssemblyDocumentObject Then
+	
+		MessageBox.Show("Данное правило следует запускать только из среды сборки." & vbCr & "И эксперименты тут неуместны :)", "Ошибочка вышла")
+
+	Else
+	
+    	If oDoc.ComponentDefinition.RepresentationsManager.ActiveLevelOfDetailRepresentation.Name <> "Главный" Then
+		
+		MessageBox.Show("Перед запуском правила измените уровень детализации" & vbCr & " сборки на [Главный].", "Ошибочка вышла")
+		
+		Else
+			Dim oAssyDef As AssemblyComponentDefinition = oDoc.ComponentDefinition
+    
+    		Dim oBOM As BOM = oAssyDef.BOM
+    		oBOM.StructuredViewEnabled = True
+    		oBOM.StructuredViewFirstLevelOnly = False
+
+    		Dim oBOMView As BOMView
+    		oBOMView = oBOM.BOMViews(2)
+  
+    		Call IterateRows(oBOMView.BOMRows, 1)
+		End If
+		
+	End If
+	
+End Sub
+
+
+Private Sub IterateRows(ByVal oBOMRows As BOMRowsEnumerator, ByVal indent As Integer)
+   
+	Dim oBOMRow As BOMRow
+    
+    For Each oBOMRow In oBOMRows
+
+        Dim oDef As ComponentDefinition
+        oDef = oBOMRow.ComponentDefinitions.Item(1)
+        
+        Dim CompFullDocumentName As String = oDef.Document.FullDocumentName
+    	Dim CompFileNameOnly As String
+    	Dim index As Integer = CompFullDocumentName.lastindexof("\")
+    
+   		CompFileNameOnly = CompFullDocumentName.substring(index+1)
+     
+    	Dim myProp As String
+		
+		
+	    Try 
+    	myProp = iProperties.Value(CompFileNameOnly, "Custom", "Номер")
+		Catch
+		customPropertySet = oDef.Document.PropertySets.Item("Inventor User Defined Properties")
+		Dim errorMessage As String = "В файле """ & CompFileNameOnly & """ отсутствует свойство ""Номер"". Данное войство будет создано сейчас, введите его значение:"
+		Dim numValue As String = InputBox(errorMessage, "Запонение номера в детали", "Номер не заполнен")
+		customPropertySet.Add(numValue.Tostring(), "Номер")
+		myProp = iProperties.Value(CompFileNameOnly, "Custom", "Номер")
+		
+		End Try
+		
+    	iProperties.Value(CompFileNameOnly, "Project", "Description") = myProp
+        
+        If Not oBOMRow.ChildRows Is Nothing Then
+		
+            Call IterateRows(oBOMRow.ChildRows, indent + 1)
+			
+        End If
+		
+    Next
+	
+End Sub
+
+
+'ByVal parentProp As String, myProp

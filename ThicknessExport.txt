@@ -1,0 +1,9 @@
+﻿Dim oPartDoc As Inventor.PartDocument
+oPartDoc = ThisApplication.ActiveDocument
+Dim oSheetMetalCompDef As SheetMetalComponentDefinition
+oSheetMetalCompDef = oPartDoc.ComponentDefinition
+Dim oThicknessParam As Parameter
+oThicknessParam = oSheetMetalCompDef.Thickness
+
+'все ради этой строки:
+oThicknessParam.ExposedAsProperty = True 

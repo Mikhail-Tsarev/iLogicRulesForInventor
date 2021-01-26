@@ -1,0 +1,8 @@
+﻿Dim SubFolder as String = "PDF"
+
+If Not System.IO.Directory.Exists(ThisDoc.Path & "\" & SubFolder) Then
+     System.IO.Directory.CreateDirectory(ThisDoc.Path & "\" & SubFolder)
+End If
+
+FullName=ThisDoc.Path & "\" & SubFolder & "\" & ThisDoc.FileName(False)& (".pdf")
+ThisDoc.Document.SaveAs(FullName, True)

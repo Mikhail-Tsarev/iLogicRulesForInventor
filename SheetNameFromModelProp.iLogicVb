@@ -1,0 +1,30 @@
+' Царев Михаил. Проект tsarevstudio.ru
+' Правило переименовывает листы чертежа по свойству "Обозначение" модели, размещенной на листе
+
+Dim oThisDoc As Inventor.Document = ThisApplication.ActiveDocument
+
+If oThisDoc.DocumentType = kDrawingDocumentObject
+
+	Dim oDoc As DrawingDocument = oThisDoc
+	Dim errorReport As String = ""
+	
+	For Each oSheet In oDoc.Sheets
+		If oSheet.DrawingViews.Count <> 0
+		oViews = oSheet.DrawingViews
+		oModelDoc = oViews.item(1).ReferencedDocumentDescriptor.ReferencedDocument 
+		oValue = oModelDoc.PropertySets.Item("Design Tracking Properties").Item("Part Number").Value
+			If oValue <> ""
+			oSheet.Name = oValue
+			Else
+			MessageBox.Show("Необходимо заполнить свойство <Обозначение> в файле """ & oModelDoc.DisplayName & """", "Ошибка")
+			End If
+		Else
+		errorReport = errorReport & vbCr & oSheet.Name
+		End If
+	Next
+	
+	If errorReport <> "" Then MessageBox.Show("На листах:" & vbCr & errorReport & vbCr & vbCr & "отсутствуют виды модели.")
+	
+Else 
+MessageBox.Show("Данное правило следует запускать только из файла чертежа!", "Ошибка")
+End If

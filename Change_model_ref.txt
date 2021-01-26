@@ -1,0 +1,19 @@
+﻿'правило заменяет ссылку на модель в чертеже
+'на файл, расположенный в той же папке, по принципу имя файла новой модели = имя файла чертежа
+
+Dim odoc = ThisDoc.Document
+Dim new_model_file as String = ThisDoc.Path & "\" & ThisDoc.FileName(False)& ".ipt"
+'MessageBox.Show(new_model_file, "Title")
+
+Dim oFD As FileDescriptor
+oFD = odoc.ReferencedFileDescriptors(1).DocumentDescriptor.ReferencedFileDescriptor
+oFD.ReplaceReference(new_model_file)
+
+'на всякий случай очищаем свойства чертежа	
+iProperties.Value("Project", "Part Number") = "" 'очищаем Обозначение
+iProperties.Value("Project", "Description") = ""
+
+'обновляемся чертеж и сохраняемся
+odoc.Update()
+ThisDoc.Save
+

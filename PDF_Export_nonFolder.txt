@@ -1,0 +1,2 @@
+﻿FullName=ThisDoc.Path & "\" & ThisDoc.FileName(False)& (".pdf")
+ThisDoc.Document.SaveAs(FullName, True)

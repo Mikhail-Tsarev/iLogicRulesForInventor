@@ -1,0 +1,36 @@
+﻿Dim oDoc As Inventor.Document = ThisApplication.ActiveDocument
+
+	If oDoc.DocumentType <> kAssemblyDocumentObject Then
+	
+		MessageBox.Show("You should run this rule from the Assembly document only!", "Error")
+
+	Else
+	
+		Dim oAsmDoc As AssemblyDocument
+    	oAsmDoc = ThisApplication.ActiveDocument
+    	Dim oRefDoc As Document
+
+		For Each oRefDoc In oAsmDoc.AllReferencedDocuments
+		
+        	If oRefDoc.DocumentType = kPartDocumentObject Then
+           		Dim oPartDoc As partDocument
+            	oPartDoc = oRefDoc
+			    
+            	Dim oUserParams As UserParameters
+            	oUserParams = oPartDoc.ComponentDefinition.Parameters.UserParameters
+			
+            	If oUserParams.Count > 0 Then
+                	Dim oUserParam As UserParameter
+                	For Each oUserParam In oUserParams
+                    	If oUserParam.Name = "G_L" Then
+						oUserParam.CustomPropertyFormat.Precision = Inventor.CustomPropertyPrecisionEnum.kZeroDecimalPlacePrecision
+						End If
+						
+               		Next
+			
+            	End If
+		
+        	End If
+			
+    	Next
+	End If

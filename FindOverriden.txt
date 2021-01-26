@@ -1,0 +1,19 @@
+
+' Поиск перебитых размеров на чертеже. Правило работает только в среде чертежа
+
+Dim oDoc As DrawingDocument = ThisDrawing.Document
+
+Dim oColorBlack As Color = ThisApplication.TransientObjects.CreateColor(0, 0, 0)
+Dim oColorViolet As Color = ThisApplication.TransientObjects.CreateColor(227, 20, 227)
+
+Dim Отображение As Boolean = InputRadioBox("выберите действие", "Показать перебитые", "Убрать подсветку", True, Title := "Отображение перебитых размеров")
+
+For Each oDim As DrawingDimension In oDoc.ActiveSheet.DrawingDimensions
+	If oDim.ModelValueOverridden Or oDim.HideValue = True Then
+		If Отображение = True Then
+		oDim.Text.Color = oColorViolet
+		Else
+		oDim.Text.Color = oColorBlack
+		End If
+End If
+Next

@@ -1,0 +1,8 @@
+﻿Dim SubFolder As String ="STEP"
+
+If Not System.IO.Directory.Exists(ThisDoc.Path & "\" & SubFolder) Then
+     System.IO.Directory.CreateDirectory(ThisDoc.Path & "\" & SubFolder)
+End If
+
+FullName=ThisDoc.Path & "\" & SubFolder & "\" & "step_" & ThisDoc.FileName(False)& (".stp")
+ThisDoc.Document.SaveAs(FullName, True)

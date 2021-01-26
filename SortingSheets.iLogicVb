@@ -1,0 +1,24 @@
+﻿Sub Main
+
+	Dim drawingDoc As DrawingDocument = ThisDoc.Document
+	Dim sheet As Sheet = Nothing
+	Dim sheetsList As New List(Of Sheet)
+	Dim browserPane As BrowserPane = drawingDoc.BrowserPanes.Item("Модель")
+
+	For Each sheet In drawingDoc.Sheets
+		sheetsList.Add(sheet)
+	Next
+	
+	sheetsList.Sort(AddressOf Comparer)
+	
+	For Each sheet In sheetsList
+		Dim sheetNode As BrowserNode = browserPane.GetBrowserNodeFromObject(sheet)
+		Dim bottomNode As BrowserNode = browserPane.TopNode.BrowserNodes.Item(browserPane.TopNode.BrowserNodes.Count)
+		browserPane.Reorder(bottomNode, False, sheetNode)
+	Next
+	
+End Sub
+
+Private Function Comparer(x As Sheet, y As Sheet) As Integer
+	Return String.Compare(x.Name,y.Name)
+End Function

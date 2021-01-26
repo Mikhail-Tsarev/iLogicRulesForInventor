@@ -1,0 +1,4 @@
+﻿iProperties.Value("Project", "Part Number") = "" 'очищаем Обозначение
+iProperties.Value("Project", "Description") = ThisDoc.FileName(False) 'заполняем Наименование по имени файла
+ThisDoc.Save
+
